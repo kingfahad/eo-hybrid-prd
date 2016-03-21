@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<title>EO</title>
+	<link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body ontouchstart="" class="loader">
+</body>
+
+<script src="cordova.js"></script>
+<script src="assets/scripts.js"></script>
+
+<script>
+	var APP_ID = 'ae.eo.hybrid',
+		APP_PREFIX = 'eo_prd_';
+
+	document.addEventListener('deviceready', function() {
+		sap.Logon.init(function() {
+			var id = device.platform.toLowerCase() == 'android' ? '1060761348348' : '';
+
+			console.log('gcm_id', id);
+
+			sap.Push.registerForNotificationTypes(sap.Push.notificationType.SOUNDS | sap.Push.notificationType.ALERT, function() {
+				console.log('register success');
+			}, function() {
+				console.log('register failed');
+			}, function(notification) {
+				console.log(notification);
+			}, id);
+
+			Helpers.getScript('assets/app.js');
+			Helpers.getScript('assets/data.js');
+		}, null, APP_ID, {
+			serverHost: 'mobility2.eo.ae',
+			https: 'true',
+			serverPort: '443',
+			communicatorId: 'REST',
+			// farmId: 'EOSMPQAS.SUPFarm',
+			// resourcePath: 'rs16.5/client/rs.dll',
+			securityConfig: 'sap'
+		});
+	}, false);
+
+</script>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<title>EO</title>
+</head>
+
+<body>
+</body>
+
+<script src="cordova.js"></script>
+
+<script>
+	var APP_ID = 'ae.eo.hybrid',
+		APP_PREFIX = 'eo_prd_',
+		SAP_CLIENT = '800';
+
+	document.addEventListener('deviceready', function() {
+		sap.Logon.init(function(data) {
+			localStorage.setItem(APP_PREFIX + 'isLoggedIn', JSON.stringify(true));
+			localStorage.setItem(APP_PREFIX + 'id', JSON.stringify(data.registrationContext.user));
+			localStorage.setItem(APP_PREFIX + 'apiUrl', JSON.stringify(data.applicationEndpointURL + '/'));
+			localStorage.setItem(APP_PREFIX + 'appConnId', JSON.stringify(data.applicationConnectionId));
+			localStorage.setItem(APP_PREFIX + 'authToken', JSON.stringify(btoa(data.registrationContext.user + ':' + data.registrationContext.password)));
+			localStorage.setItem(APP_PREFIX + 'sapClient', JSON.stringify(SAP_CLIENT));
+
+			if (device && device.platform.toLowerCase() == 'ios') {
+				window.location = 'app.html';
+			} else if (window.location.replace) {
+				window.location.replace('app.html');
+			} else {
+				window.location = 'app.html';
+			}
+		}, function() {
+			navigator.app.exitApp();
+		}, APP_ID, {
+			serverHost: 'mobility2.eo.ae',
+			https: 'true',
+			serverPort: '443',
+			communicatorId: 'REST',
+			// farmId: 'EOSMPQAS.SUPFarm',
+			// resourcePath: 'rs16.5/client/rs.dll',
+			securityConfig: 'sap'
+		});
+	}, false);
+
+</script>
+
+</html>
